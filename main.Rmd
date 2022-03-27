@@ -70,12 +70,111 @@ testing <- read_csv(file2, na=c("#DIV/0!","NA",""),show_col_types = FALSE) %>%
                new_window = factor(new_window)) %>%
         rename(id = ...1)
 
-dim(training)
-dim(testing)
+```
+
+There are **`r nrow(training)`** observations of `r ncol(training)` variables in the training set. In the testing set, we have **`r nrow(testing)`** observations of the same variables.
+
+## Cleaning the data
+
+We will remove unnecessary variables, starting with mostly NA variables. Then, we remove the first seven columns of the dataset, which corresponds to metadata and therefore irrelevant to the outcome. 
+
+```{r}
+training <- training[, colMeans(is.na(training)) < 0.9] 
+training <- training[, -c(1:7)]
+```
+
+After removing unnecessary variables, the number of variables has been reduced to **`r ncol(training)`**. Now, we partition the training set into a training set and a validation set. We will keep the original testing set for the project final quiz.
+
+```{r}
+forTrain <- createDataPartition(y=training$classe, p=0.7, list=FALSE)
+t_sub <- training[forTrain,]
+v_sub <- training[-forTrain,]
+```
+
+## Working with models
+
+We will create and test three models: Decision Tree, Random Forests and Gradient Boosted Trees. We will set up control for training to use 3-fold cross validation.
+
+```{r}
+control <- trainControl(method="cv", number=3, verboseIter=F)
+```
+
+### Decision Tree
+
+We create the tree:
+
+```{r cache=TRUE}
+trees <- train(classe~., data=t_sub, method="rpart",
+               trControl=control, tuneLength = 5)
+
+```
+Then we make the predictions:
+
+```{r}
+pred_trees <- predict(trees, v_sub)
+conmtx_trees <- confusionMatrix(pred_trees, factor(v_sub$classe))
+conmtx_trees
+```
+
+### Random Forest
+
+We create the model:
+
+```{r  cache=TRUE}
+rf <- train(classe~., data=t_sub, method="rf", 
+                trControl = control, tuneLength = 5)
+```
+
+We make the predictions:
+
+```{r}
+pred_rf <- predict(rf, v_sub)
+conmtx_rf <- confusionMatrix(pred_rf, factor(v_sub$classe))
+conmtx_rf
+```
+
+### Gradient Boosted Trees
+
+We create the model:
+
+```{r  cache=TRUE}
+gd_trees <- train(classe~., data=t_sub, method="gbm", trControl = control, tuneLength = 5, verbose = FALSE)
+```
+
+We make the predictions:
+
+```{r cache=TRUE}
+pred_gd_trees <- predict(gd_trees, v_sub)
+conmtx_gd <- confusionMatrix(pred_gd_trees, factor(v_sub$classe))
+conmtx_gd
+```
+The best model for this project is the **random forest** model with **0.9973** accuracy. Therefore, we chose this model to make the predictions on the test set. 
+
+## Predictions on test set (quiz)
+
+```{r}
+predictions <- predict(rf, testing)
+print(predictions)
 ```
 
 
 ## Appendix
 
+### Figure 1: Decision Tree
 
+```{r}
+fancyRpartPlot(trees$finalModel)
+```
+
+### Figure 2: Random forest
+
+```{r}
+plot(rf)
+```
+
+### Figure 3: Gradient boosted trees
+
+```{r}
+plot(gd_trees)
+```
 
