@@ -1,0 +1,54 @@
+---
+title: "Practical Machine Learning: Barbell Lifts"
+author: "Hector Mario Romer"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+<style>
+body {
+        text-align: justify
+}
+</style>
+
+## Overview
+The goal of this project is to predict the manner in which a group of enthusiasts perform barbell lifts. We need to create a report describing how the model was built, how cross validation was used, what is the expected sample error and why choices were made during the analysis. The resulting model will be used to predict 20 different test cases.
+
+## Background
+
+Using devices such as Jawbone Up, Nike FuelBand, and Fitbit it is now possible to collect a large amount of data about personal activity relatively inexpensively. These type of devices are part of the quantified self movement – a group of enthusiasts who take measurements about themselves regularly to improve their health, to find patterns in their behavior, or because they are tech geeks. One thing that people regularly do is quantify how much of a particular activity they do, but they rarely quantify how well they do it. In this project, your goal will be to use data from accelerometers on the belt, forearm, arm, and dumbell of 6 participants. They were asked to perform barbell lifts correctly and incorrectly in 5 different ways.
+
+## Loading required libraries
+
+Required libraries are loaded as follows. We also set a seed for reproducibility.
+
+```{r}
+library(ggplot2)
+library(dplyr)
+library(readr)
+library(caret)
+library(kernlab)
+library(rattle)
+set.seed(1317)
+```
+
+## Load data
+
+The training data for this project are available here: 
+
+https://d396qusza40orc.cloudfront.net/predmachlearn/pml-training.csv
+
+The test data are available here:
+
+https://d396qusza40orc.cloudfront.net/predmachlearn/pml-testing.csv
+
+
+
+
+## Appendix
+
+
+
