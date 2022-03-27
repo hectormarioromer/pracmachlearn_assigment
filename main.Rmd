@@ -25,7 +25,8 @@ Using devices such as Jawbone Up, Nike FuelBand, and Fitbit it is now possible t
 
 Required libraries are loaded as follows. We also set a seed for reproducibility.
 
-```{r}
+```{r message=FALSE}
+library(lattice)
 library(ggplot2)
 library(dplyr)
 library(readr)
@@ -35,7 +36,7 @@ library(rattle)
 set.seed(1317)
 ```
 
-## Load data
+## Loading data
 
 The training data for this project are available here: 
 
@@ -45,7 +46,33 @@ The test data are available here:
 
 https://d396qusza40orc.cloudfront.net/predmachlearn/pml-testing.csv
 
+```{r message=FALSE}
+url1 <- "https://d396qusza40orc.cloudfront.net/predmachlearn/pml-training.csv"
+url2 <- "https://d396qusza40orc.cloudfront.net/predmachlearn/pml-testing.csv"
+file1 <- "pml-training.csv"
+file2 <- "pml-testing.csv"
 
+if (!file.exists(file1)) {
+        download.file(url1, file1)
+}
+
+if (!file.exists(file2)) {
+        download.file(url2, file2)
+}
+
+training <- read_csv(file1, na=c("#DIV/0!","NA",""),show_col_types = FALSE) %>% 
+        mutate(user_name = factor(user_name), 
+               new_window = factor(new_window)) %>%
+        rename(id = ...1)
+
+testing <- read_csv(file2, na=c("#DIV/0!","NA",""),show_col_types = FALSE) %>% 
+        mutate(user_name = factor(user_name), 
+               new_window = factor(new_window)) %>%
+        rename(id = ...1)
+
+dim(training)
+dim(testing)
+```
 
 
 ## Appendix
