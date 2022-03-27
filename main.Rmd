@@ -148,7 +148,7 @@ pred_gd_trees <- predict(gd_trees, v_sub)
 conmtx_gd <- confusionMatrix(pred_gd_trees, factor(v_sub$classe))
 conmtx_gd
 ```
-The best model for this project is the **random forest** model with **0.9973** accuracy. Therefore, we chose this model to make the predictions on the test set. 
+The best model for this project is the **random forest** model with **0.9973** accuracy. Expected out of sample error is **0.27%** which is excellent. We chose this model to make the predictions on the test set. 
 
 ## Predictions on test set (quiz)
 
